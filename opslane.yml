@@ -1,0 +1,36 @@
+dockerfile: docker/Dockerfile
+port: 3000
+health_path: /api/health
+services:
+  - type: postgres
+    version: postgres:15
+  - smtp
+build_args:
+  NEXT_PRIVATE_ENCRYPTION_KEY: 3f423784135c2994f202289ad1a876d62572cc6ddff1468caa3a7b3eff928a53
+  NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: 87204ac04c4a4d2167a3348a0bddcccaa1960672988d5272f47bf7bef8c6b92a
+env:
+  NEXTAUTH_SECRET: 913f188ee02818a4d4faf3dcdde40949eaff30b97b1ec091a3332806508a94b1
+  NEXT_PRIVATE_ENCRYPTION_KEY: 3f423784135c2994f202289ad1a876d62572cc6ddff1468caa3a7b3eff928a53
+  NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: 87204ac04c4a4d2167a3348a0bddcccaa1960672988d5272f47bf7bef8c6b92a
+  NEXT_PRIVATE_DATABASE_URL: postgres://app:app@pg:5432/app
+  NEXT_PRIVATE_DIRECT_DATABASE_URL: postgres://app:app@pg:5432/app
+  NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
+  NEXT_PRIVATE_INTERNAL_WEBAPP_URL: http://localhost:3000
+  NEXT_PUBLIC_UPLOAD_TRANSPORT: database
+  NEXT_PRIVATE_SMTP_TRANSPORT: smtp-auth
+  NEXT_PRIVATE_SMTP_HOST: smtp
+  NEXT_PRIVATE_SMTP_PORT: "2500"
+  NEXT_PRIVATE_SMTP_FROM_NAME: Documenso
+  NEXT_PRIVATE_SMTP_FROM_ADDRESS: noreply@documenso.local
+  DOCUMENSO_DISABLE_TELEMETRY: "true"
+migrate: npx prisma migrate deploy --schema /app/packages/prisma/schema.prisma
+seed: node /opslane/seed.cjs
+verify_setup:
+  instructions: |
+    Sign in at /signin with verify@documenso.local / OpslaneVerify123!.
+    The account has a verified email and its default personal organisation and team.
+    After sign-in, the empty documents page is ready to use.
+notes: |
+  The seed helper starts the built server to use Documenso's own signup route,
+  then verifies the account with the Prisma client. The image start script runs
+  migrations again before booting the server.
