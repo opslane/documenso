@@ -4,6 +4,8 @@ health_path: /api/health
 services:
   - type: postgres
     version: postgres:15
+  - type: s3
+    bucket: documenso
   - smtp
 build_args:
   NEXT_PRIVATE_ENCRYPTION_KEY: 3f423784135c2994f202289ad1a876d62572cc6ddff1468caa3a7b3eff928a53
@@ -16,7 +18,14 @@ env:
   NEXT_PRIVATE_DIRECT_DATABASE_URL: postgres://app:app@pg:5432/app
   NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
   NEXT_PRIVATE_INTERNAL_WEBAPP_URL: http://localhost:3000
-  NEXT_PUBLIC_UPLOAD_TRANSPORT: database
+  # Uploads go to the s3 service (MinIO, reachable as minio:9000 on the run's network).
+  NEXT_PUBLIC_UPLOAD_TRANSPORT: s3
+  NEXT_PRIVATE_UPLOAD_ENDPOINT: http://minio:9000
+  NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE: "true"
+  NEXT_PRIVATE_UPLOAD_REGION: us-east-1
+  NEXT_PRIVATE_UPLOAD_BUCKET: documenso
+  NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID: app
+  NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY: appsecret
   NEXT_PRIVATE_SMTP_TRANSPORT: smtp-auth
   NEXT_PRIVATE_SMTP_HOST: smtp
   NEXT_PRIVATE_SMTP_PORT: "2500"
