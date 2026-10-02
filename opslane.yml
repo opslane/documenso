@@ -1,4 +1,4 @@
-dockerfile: docker/Dockerfile
+dockerfile: docker/verify.Dockerfile
 port: 3000
 health_path: /api/health
 services:
