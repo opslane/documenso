@@ -5,7 +5,7 @@ type CheckStatus = 'ok' | 'warning' | 'error';
 
 export const loader = async () => {
   const checks: {
-    database: { status: CheckStatus; users?: number; teams?: number };
+    database: { status: CheckStatus; users?: number; teams?: number; documents?: number };
     certificate: { status: CheckStatus };
   } = {
     database: { status: 'ok' },
@@ -18,6 +18,7 @@ export const loader = async () => {
     await prisma.$queryRaw`SELECT 1`;
     checks.database.users = await prisma.user.count();
     checks.database.teams = await prisma.team.count();
+    checks.database.documents = await prisma.envelope.count();
   } catch {
     checks.database = { status: 'error' };
     overallStatus = 'error';
