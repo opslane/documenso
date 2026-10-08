@@ -15,7 +15,7 @@ export const loader = async () => {
   let overallStatus: CheckStatus = 'ok';
 
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    await prisma.$queryRaw`SELECT 1 AS ok`;
     checks.database.users = await prisma.user.count();
   } catch {
     checks.database = { status: 'error' };
