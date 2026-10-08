@@ -3,6 +3,7 @@ import { prisma } from '@documenso/prisma';
 
 type CheckStatus = 'ok' | 'warning' | 'error';
 
+// Health check: database and certificate status.
 export const loader = async () => {
   const checks: {
     database: { status: CheckStatus };
