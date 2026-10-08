@@ -229,3 +229,4 @@ This will load environment variables from your `.env` and `.env.local` files.
 ## Health
 
 `GET /api/health` reports the user count under `database.users`.
+- The count is the number of rows in the `User` table.
