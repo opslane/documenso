@@ -26,11 +26,16 @@ export const run = async ({ payload, io: _io }: { payload: TExecuteWebhookJobDef
 
   const result = await executeWebhookCall({ url, body: payloadData, secret });
 
+  // A 4xx means the receiver rejected this payload: sending the same payload again only repeats the
+  // refusal, so only network errors (0) and server errors (5xx) are retried.
+  const retryable = result.responseCode === 0 || result.responseCode >= 500;
+  const delivered = result.success || !retryable;
+
   await prisma.webhookCall.create({
     data: {
       url,
       event,
-      status: result.success ? WebhookCallStatus.SUCCESS : WebhookCallStatus.FAILED,
+      status: delivered ? WebhookCallStatus.SUCCESS : WebhookCallStatus.FAILED,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       requestBody: payloadData as Prisma.InputJsonValue,
       responseCode: result.responseCode,
@@ -40,7 +45,7 @@ export const run = async ({ payload, io: _io }: { payload: TExecuteWebhookJobDef
     },
   });
 
-  if (!result.success) {
+  if (!delivered) {
     throw new Error(`Webhook execution failed with status ${result.responseCode}`);
   }
 
