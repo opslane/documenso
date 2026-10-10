@@ -7,10 +7,14 @@ services:
   - type: s3
     bucket: documenso
   - smtp
+  # A receiver for the webhooks the app sends: bug hunts give the app http://webhooks:8080/… as a webhook URL.
+  - webhooks
 build_args:
   NEXT_PRIVATE_ENCRYPTION_KEY: 3f423784135c2994f202289ad1a876d62572cc6ddff1468caa3a7b3eff928a53
   NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: 87204ac04c4a4d2167a3348a0bddcccaa1960672988d5272f47bf7bef8c6b92a
 env:
+  # Documenso refuses webhook URLs that resolve to private addresses; the webhooks receiver is one.
+  NEXT_PRIVATE_WEBHOOK_SSRF_BYPASS_HOSTS: webhooks
   NEXTAUTH_SECRET: 913f188ee02818a4d4faf3dcdde40949eaff30b97b1ec091a3332806508a94b1
   NEXT_PRIVATE_ENCRYPTION_KEY: 3f423784135c2994f202289ad1a876d62572cc6ddff1468caa3a7b3eff928a53
   NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY: 87204ac04c4a4d2167a3348a0bddcccaa1960672988d5272f47bf7bef8c6b92a
@@ -34,6 +38,8 @@ env:
   DOCUMENSO_DISABLE_TELEMETRY: "true"
 migrate: npx prisma migrate deploy --schema /app/packages/prisma/schema.prisma
 seed: node /opslane/seed.cjs
+auth:
+  session_command: node /opslane/session.cjs
 verify_setup:
   instructions: |
     Sign in at /signin with verify@documenso.local / OpslaneVerify123!.
