@@ -15,7 +15,7 @@ export const loader = async ({ request }: { request: Request }) => {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const [users, documents] = await Promise.all([prisma.user.count(), prisma.document.count()]);
+  const [users, documents] = await Promise.all([prisma.user.count(), prisma.envelope.count()]);
 
   return Response.json({ users, documents });
 };
