@@ -1,6 +1,7 @@
 import { getCertificateStatus } from '@documenso/lib/server-only/cert/cert-status';
 import { prisma } from '@documenso/prisma';
 
+// Health check: database and certificate status.
 type CheckStatus = 'ok' | 'warning' | 'error';
 
 export const loader = async () => {
