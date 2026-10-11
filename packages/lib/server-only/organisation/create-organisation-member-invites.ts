@@ -137,11 +137,18 @@ export const createOrganisationMemberInvites = async ({
     data: organisationMemberInvites,
   });
 
+  // Send from the invites as stored, so the email always matches the row it invites to.
+  const storedInvites = await prisma.organisationMemberInvite.findMany({
+    where: { organisationId, email: { in: organisationMemberInvites.map(({ email }) => email) } },
+    orderBy: { createdAt: 'desc' },
+    distinct: ['email'],
+  });
+
   const sendEmailResult = await Promise.allSettled(
-    organisationMemberInvites.map(async ({ email, token }) =>
+    storedInvites.map(async ({ email, id }) =>
       sendOrganisationMemberInviteEmail({
         email,
-        token,
+        token: id,
         organisation,
         senderName: userName,
       }),
