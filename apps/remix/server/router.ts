@@ -24,6 +24,7 @@ import { requestId } from 'hono/request-id';
 import type { Logger } from 'pino';
 
 import { aiRoute } from './api/ai/route';
+import { crmRoute } from './api/crm/route';
 import { downloadRoute } from './api/download/download';
 import { filesRoute } from './api/files/files';
 import { type AppContext, appContext } from './context';
@@ -101,6 +102,7 @@ app.use('/api/v2-beta/*', apiV2RateLimitMiddleware);
 
 // Auth server.
 app.route('/api/auth', auth);
+app.route('/api/crm', crmRoute);
 
 // Files route.
 app.use('/api/files/upload-pdf', fileRateLimitMiddleware);
