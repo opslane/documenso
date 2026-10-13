@@ -1,3 +1,4 @@
+// Timeout helpers.
 /**
  * Race a promise against a timeout. Returns `null` if the timeout
  * fires before the promise settles.
