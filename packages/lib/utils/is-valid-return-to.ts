@@ -2,7 +2,7 @@
 import { NEXT_PUBLIC_WEBAPP_URL } from '@documenso/lib/constants/app';
 
 export const isValidReturnTo = (returnTo?: string) => {
-  if (!returnTo) {
+  if (!returnTo || returnTo === 'null') {
     return false;
   }
 
@@ -22,7 +22,7 @@ export const isValidReturnTo = (returnTo?: string) => {
 };
 
 export const normalizeReturnTo = (returnTo?: string) => {
-  if (!returnTo) {
+  if (!returnTo || returnTo === 'null') {
     return "/";
   }
 
