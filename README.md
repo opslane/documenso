@@ -226,4 +226,4 @@ This will load environment variables from your `.env` and `.env.local` files.
 
 ![Repository Activity](https://repobeats.axiom.co/api/embed/622a2e9aa709696f7226304b5b7178a5741b3868.svg)
 
-<!-- merge gate e2e: docs-only push -->
+<!-- merge gate e2e: docs-only push --><!-- gate off -->
