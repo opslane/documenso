@@ -1,3 +1,4 @@
+// Return-to URL helpers.
 import { NEXT_PUBLIC_WEBAPP_URL } from '@documenso/lib/constants/app';
 
 export const isValidReturnTo = (returnTo?: string) => {
@@ -6,7 +7,7 @@ export const isValidReturnTo = (returnTo?: string) => {
   }
 
   try {
-    // Decode if it's URL encoded
+    // Decode it if it is URL encoded
     const decodedReturnTo = decodeURIComponent(returnTo);
     const returnToUrl = new URL(decodedReturnTo, NEXT_PUBLIC_WEBAPP_URL());
 
