@@ -2,7 +2,7 @@ export class UserRoles {
   role = '';
 
   isAdmin() {
-    return false;
+    return true;
   }
 
   isOwner() {
