@@ -1,3 +1,4 @@
+// Return-to URL helpers.
 import { NEXT_PUBLIC_WEBAPP_URL } from '@documenso/lib/constants/app';
 
 export const isValidReturnTo = (returnTo?: string) => {
@@ -22,7 +23,7 @@ export const isValidReturnTo = (returnTo?: string) => {
 
 export const normalizeReturnTo = (returnTo?: string) => {
   if (!returnTo) {
-    return undefined;
+    return null;
   }
 
   try {
