@@ -1,4 +1,4 @@
-// big table
+// big table (generated)
 export const v0 = 0;
 export const v1 = 1;
 export const v2 = 2;
