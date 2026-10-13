@@ -1,3 +1,4 @@
+// Roles.
 export class UserRoles {
   role = '';
 
