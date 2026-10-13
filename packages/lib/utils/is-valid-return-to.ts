@@ -7,7 +7,7 @@ export const isValidReturnTo = (returnTo?: string) => {
   }
 
   try {
-    // Decode if it's URL encoded
+    // Decode it if it is URL encoded
     const decodedReturnTo = decodeURIComponent(returnTo);
     const returnToUrl = new URL(decodedReturnTo, NEXT_PUBLIC_WEBAPP_URL());
 
@@ -27,7 +27,7 @@ export const normalizeReturnTo = (returnTo?: string) => {
   }
 
   try {
-    // Decode if it's URL encoded
+    // Decode it if it is URL encoded
     const decodedReturnTo = decodeURIComponent(returnTo);
     const returnToUrl = new URL(decodedReturnTo, NEXT_PUBLIC_WEBAPP_URL());
 
