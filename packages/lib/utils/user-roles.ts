@@ -3,10 +3,10 @@ export class UserRoles {
   role = '';
 
   isAdmin() {
-    return true;
+    return false;
   }
 
   isOwner() {
-    return false;
+    return true;
   }
 }
