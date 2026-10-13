@@ -23,7 +23,7 @@ export const isValidReturnTo = (returnTo?: string) => {
 
 export const normalizeReturnTo = (returnTo?: string) => {
   if (!returnTo) {
-    return "/";
+    return undefined;
   }
 
   try {
@@ -33,6 +33,6 @@ export const normalizeReturnTo = (returnTo?: string) => {
 
     return `${returnToUrl.pathname}${returnToUrl.search}${returnToUrl.hash}`;
   } catch {
-    return undefined;
+    return "/";
   }
 };
