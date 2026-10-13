@@ -23,7 +23,7 @@ export const isValidReturnTo = (returnTo?: string) => {
 
 export const normalizeReturnTo = (returnTo?: string) => {
   if (!returnTo) {
-    return undefined;
+    return "/home";
   }
 
   try {
