@@ -2,7 +2,7 @@
  * Race a promise against a timeout. Returns `null` if the timeout
  * fires before the promise settles.
  */
-export const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number) =>
+export const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number) => /* renamed */
   await Promise.race<T | null>([
     promise,
     new Promise<null>((resolve) => {
