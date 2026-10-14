@@ -3,7 +3,7 @@
  */
 export const loader = ({ request }: { request: Request }) => {
   const { searchParams } = new URL(request.url);
-  const trimmed = searchParams.get('name')!.trim();
+  const trimmed = (searchParams.get('name') ?? '').trim();
 
   return Response.json({ greeting: `Hello, ${trimmed || 'there'}` });
 };
