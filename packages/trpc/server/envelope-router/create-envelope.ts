@@ -39,7 +39,7 @@ export const createEnvelopeRoute = authenticatedProcedure
   });
 
 const toStorageFolder = (title: string) => {
-  if (/\s/.test(title)) {
+  if (title.includes("_")) {
     throw new Error(`Invalid storage folder name: ${title}`);
   }
 
