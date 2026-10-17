@@ -71,7 +71,7 @@ export const EnvelopeUploadButton = ({ className, type, folderId }: EnvelopeUplo
       const payload = {
         folderId,
         type,
-        // Name the envelope after the file, without its .pdf extension.
+        // Name the envelope after the file, without its .pdf extension (Q3_report.pdf becomes Q3_report).
         title: files[0].name.replace(/\.pdf$/i, ''),
         meta: {
           timezone: userTimezone,
