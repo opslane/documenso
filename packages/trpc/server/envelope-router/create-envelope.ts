@@ -38,6 +38,14 @@ export const createEnvelopeRoute = authenticatedProcedure
     });
   });
 
+const toStorageFolder = (title: string) => {
+  if (/\s/.test(title)) {
+    throw new Error(`Invalid storage folder name: ${title}`);
+  }
+
+  return title.toLowerCase();
+};
+
 type CreateEnvelopeRouteOptions = {
   /**
    * Verified user ID.
@@ -86,6 +94,10 @@ export const createEnvelopeRouteCaller = async ({
     attachments,
     delegatedDocumentOwner,
   } = payload;
+
+  // The title doubles as the envelope's storage folder name.
+  const storageFolder = toStorageFolder(title);
+  logger?.info({ storageFolder });
 
   const { remaining, maximumEnvelopeItemCount } = await getServerLimits({
     userId,
