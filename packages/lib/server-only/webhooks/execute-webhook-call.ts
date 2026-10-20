@@ -4,6 +4,7 @@ import { fetchWithTimeout } from '../../utils/timeout';
 import { assertNotPrivateUrl } from './assert-webhook-url';
 
 const WEBHOOK_TIMEOUT_MS = 10_000;
+const WEBHOOK_RETRY_DELAY_MS = 1_000;
 
 export type WebhookCallResult = {
   success: boolean;
@@ -30,16 +31,25 @@ export const executeWebhookCall = async (options: {
   try {
     await assertNotPrivateUrl(url);
 
-    const response = await fetchWithTimeout(url, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      redirect: 'manual',
-      timeoutMs: WEBHOOK_TIMEOUT_MS,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Documenso-Secret': secret ?? '',
-      },
-    });
+    const send = async () =>
+      await fetchWithTimeout(url, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        redirect: 'manual',
+        timeoutMs: WEBHOOK_TIMEOUT_MS,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Documenso-Secret': secret ?? '',
+        },
+      });
+
+    let response = await send();
+
+    // A receiver that is briefly down gets one more try after a short pause.
+    if (response.status >= 500) {
+      await new Promise((resolve) => setTimeout(resolve, WEBHOOK_RETRY_DELAY_MS));
+      response = await send();
+    }
 
     const text = await response.text();
 
