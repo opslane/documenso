@@ -11,7 +11,7 @@ export const loader = async () => {
   } = {
     database: { status: 'ok' },
     certificate: { status: 'ok' },
-    uptime: { status: 'ok', seconds: Math.round(process.uptime()) },
+    uptime: { status: 'ok', seconds: Math.floor(process.uptime()) },
   };
 
   let overallStatus: CheckStatus = 'ok';
