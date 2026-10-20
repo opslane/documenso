@@ -7,9 +7,11 @@ export const loader = async () => {
   const checks: {
     database: { status: CheckStatus };
     certificate: { status: CheckStatus };
+    uptime: { status: CheckStatus; seconds: number };
   } = {
     database: { status: 'ok' },
     certificate: { status: 'ok' },
+    uptime: { status: 'ok', seconds: Math.round(process.uptime()) },
   };
 
   let overallStatus: CheckStatus = 'ok';
