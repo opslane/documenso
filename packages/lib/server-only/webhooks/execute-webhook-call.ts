@@ -51,7 +51,13 @@ export const executeWebhookCall = async (options: {
       response = await send();
     }
 
-    const text = await response.text();
+    // The body is read under the same limit as the headers, so a receiver that stalls it ends as a failed call.
+    const text = await Promise.race([
+      response.text(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Webhook response body timed out')), WEBHOOK_TIMEOUT_MS),
+      ),
+    ]);
 
     return {
       success: response.ok,
