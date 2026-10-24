@@ -17,9 +17,12 @@ export type UpdateTeamOptions = {
 
 export const updateTeam = async ({ userId, teamId, data }: UpdateTeamOptions): Promise<void> => {
   try {
+    // Team URLs are case-insensitive: "MyTeam" and "myteam" are the same URL.
+    const url = data.url?.toLowerCase();
+
     const foundTeamWithUrl = await prisma.team.findFirst({
       where: {
-        url: data.url,
+        url,
         id: {
           not: teamId,
         },
@@ -28,7 +31,7 @@ export const updateTeam = async ({ userId, teamId, data }: UpdateTeamOptions): P
 
     const foundOrganisationWithUrl = await prisma.organisation.findFirst({
       where: {
-        url: data.url,
+        url,
       },
     });
 
