@@ -16,10 +16,13 @@ export type UpdateTeamOptions = {
 };
 
 export const updateTeam = async ({ userId, teamId, data }: UpdateTeamOptions): Promise<void> => {
+  // Team URLs are case-insensitive: stored lowercase, and a URL differing only in case is taken.
+  const url = data.url?.toLowerCase();
+
   try {
     const foundTeamWithUrl = await prisma.team.findFirst({
       where: {
-        url: data.url,
+        url: url ? { equals: url, mode: 'insensitive' } : undefined,
         id: {
           not: teamId,
         },
@@ -45,7 +48,7 @@ export const updateTeam = async ({ userId, teamId, data }: UpdateTeamOptions): P
         roles: TEAM_MEMBER_ROLE_PERMISSIONS_MAP['MANAGE_TEAM'],
       }),
       data: {
-        url: data.url,
+        url,
         name: data.name,
       },
     });
