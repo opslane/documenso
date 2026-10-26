@@ -1,6 +1,8 @@
 import { getCertificateStatus } from '@documenso/lib/server-only/cert/cert-status';
 import { prisma } from '@documenso/prisma';
 
+import { saveSnapshot } from '~/utils/health-snapshots.server';
+
 type CheckStatus = 'ok' | 'warning' | 'error';
 
 export const loader = async () => {
@@ -37,6 +39,8 @@ export const loader = async () => {
     checks.certificate = { status: 'error' };
     overallStatus = 'error';
   }
+
+  saveSnapshot(overallStatus);
 
   return Response.json(
     {
