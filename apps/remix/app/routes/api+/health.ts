@@ -42,6 +42,7 @@ export const loader = async () => {
     {
       status: overallStatus,
       timestamp: new Date().toISOString(),
+      uptimeSeconds: Math.round(process.uptime()),
       checks,
     },
     { status: overallStatus === 'error' ? 500 : 200 },
