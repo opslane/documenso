@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
 
         <p className="mt-2 text-muted-foreground text-sm">
           <Trans>
-            No worries, it happens! Enter your email and we'll email you a special link to reset your password. The link expires after 1 hour.
+            No worries, it happens! Enter your email and we'll email you a special link to reset your password. The link expires after one hour.
           </Trans>
         </p>
 
