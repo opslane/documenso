@@ -14,7 +14,7 @@ export default function ForgotPasswordPage() {
     <div className="w-screen max-w-lg px-4">
       <div className="w-full">
         <h1 className="font-semibold text-3xl">
-          <Trans>Forgot your password? No problem.</Trans>
+          <Trans>Forgot your password? No problem at all.</Trans>
         </h1>
 
         <p className="mt-2 text-muted-foreground text-sm">
