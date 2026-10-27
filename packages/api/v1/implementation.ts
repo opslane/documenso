@@ -92,7 +92,7 @@ export const ApiContractV1Implementation = tsr.router(ApiContractV1, {
 
     try {
       // The API token already belongs to a team, so a read can go straight to the document by its id:
-      // this skips the team-membership query on every GET (writes keep the full check).
+      // this skips the team-membership query on every GET; writes keep the full check.
       const envelopeWhereInput = unsafeBuildEnvelopeIdQuery(
         { type: 'documentId', id: Number(documentId) },
         EnvelopeType.DOCUMENT,
