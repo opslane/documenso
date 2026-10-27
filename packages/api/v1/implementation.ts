@@ -15,6 +15,7 @@ import { createDocumentData } from '@documenso/lib/server-only/document-data/cre
 import { updateDocumentMeta } from '@documenso/lib/server-only/document-meta/upsert-document-meta';
 import { createEnvelope } from '@documenso/lib/server-only/envelope/create-envelope';
 import { getEnvelopeById, getEnvelopeWhereInput } from '@documenso/lib/server-only/envelope/get-envelope-by-id';
+import { unsafeBuildEnvelopeIdQuery } from '@documenso/lib/utils/envelope';
 import { deleteDocumentField } from '@documenso/lib/server-only/field/delete-document-field';
 import { updateEnvelopeFields } from '@documenso/lib/server-only/field/update-envelope-fields';
 import { insertFormValuesInPdf } from '@documenso/lib/server-only/pdf/insert-form-values-in-pdf';
@@ -90,15 +91,12 @@ export const ApiContractV1Implementation = tsr.router(ApiContractV1, {
     });
 
     try {
-      const { envelopeWhereInput } = await getEnvelopeWhereInput({
-        id: {
-          type: 'documentId',
-          id: Number(documentId),
-        },
-        type: EnvelopeType.DOCUMENT,
-        userId: user.id,
-        teamId: team.id,
-      });
+      // The API token already belongs to a team, so a read can go straight to the document by its id:
+      // this skips the team-membership query on every GET; writes keep the full check.
+      const envelopeWhereInput = unsafeBuildEnvelopeIdQuery(
+        { type: 'documentId', id: Number(documentId) },
+        EnvelopeType.DOCUMENT,
+      );
 
       const envelope = await prisma.envelope.findFirstOrThrow({
         where: envelopeWhereInput,
