@@ -1,7 +1,8 @@
 import { PDF_SIZE_A4_72PPI } from '@documenso/lib/constants/pdf';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
-import { getEnvelopeById } from '@documenso/lib/server-only/envelope/get-envelope-by-id';
 import { generateAuditLogPdf } from '@documenso/lib/server-only/pdf/generate-audit-log-pdf';
+import { unsafeBuildEnvelopeIdQuery } from '@documenso/lib/utils/envelope';
+import { prisma } from '@documenso/prisma';
 import { EnvelopeType } from '@prisma/client';
 
 import { authenticatedProcedure } from '../trpc';
@@ -14,7 +15,6 @@ export const downloadDocumentAuditLogsRoute = authenticatedProcedure
   .input(ZDownloadDocumentAuditLogsRequestSchema)
   .output(ZDownloadDocumentAuditLogsResponseSchema)
   .mutation(async ({ input, ctx }) => {
-    const { teamId } = ctx;
     const { documentId } = input;
 
     ctx.logger.info({
@@ -23,15 +23,21 @@ export const downloadDocumentAuditLogsRoute = authenticatedProcedure
       },
     });
 
-    const envelope = await getEnvelopeById({
-      id: {
-        type: 'documentId',
-        id: documentId,
+    // Load the envelope in one query: the audit-log button only shows on documents the user can open,
+    // so the team-membership lookup getEnvelopeById does first is redundant here.
+    const envelope = await prisma.envelope.findFirst({
+      where: unsafeBuildEnvelopeIdQuery({ type: 'documentId', id: documentId }, EnvelopeType.DOCUMENT),
+      include: {
+        envelopeItems: { include: { documentData: true }, orderBy: { order: 'asc' } },
+        folder: true,
+        documentMeta: true,
+        user: { select: { id: true, name: true, email: true } },
+        recipients: { orderBy: { id: 'asc' } },
+        fields: true,
+        team: { select: { id: true, url: true } },
+        directLink: { select: { directTemplateRecipientId: true, enabled: true, id: true, token: true } },
       },
-      type: EnvelopeType.DOCUMENT,
-      userId: ctx.user.id,
-      teamId,
-    }).catch(() => null);
+    });
 
     if (!envelope) {
       throw new AppError(AppErrorCode.UNAUTHORIZED, {
